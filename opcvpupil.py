@@ -12,8 +12,8 @@ import numpy as np
 
 
 cap=cv2.VideoCapture(0)
-face_cascade = cv2.CascadeClassifier('D:\\ProgramData\\Anaconda3\\Lib\\site-packages\\cv2\\data\\haarcascade_frontalface_default.xml')
-eye_cascade = cv2.CascadeClassifier('D:\\ProgramData\\Anaconda3\\Lib\\site-packages\\cv2\\data\\haarcascade_eye_tree_eyeglasses.xml')
+face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+eye_cascade = cv2.CascadeClassifier('haarcascade_eye_tree_eyeglasses.xml')#On error change to absolute path
 font = cv2.FONT_HERSHEY_SIMPLEX
 
 
@@ -28,6 +28,7 @@ isStatic = False
 settled = False
 def sharpen(image):
     kernel = np.array([[0,-1,0],[-1,4.5,-1],[0,-1,0]],np.float32)#Laplace算子实现滤波器
+    #Actually array:[[0,-1,0],[-1,5,-1],[0,-1,0]] works as sharpening,this kernel in use destroys the image,but makes pupil more outstanding.
     dst = cv2.filter2D(image,-1,kernel=kernel)
     return dst
 
@@ -37,7 +38,6 @@ def sharpen(image):
 
 while(cap.isOpened()):
     ret,frame = cap.read()
-    #frame = cv2.imread('D:\\1.jpg')
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     gray = cv2.equalizeHist(gray)
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
